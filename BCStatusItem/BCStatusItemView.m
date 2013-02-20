@@ -319,7 +319,7 @@
   NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
   [threadDict setValue:[NSNumber numberWithBool:exitNow] forKey:@"ThreadShouldExitNow"];
   
-  int index = 0;
+  NSUInteger index = 0;
   
   
   
