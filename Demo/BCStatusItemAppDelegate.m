@@ -12,12 +12,10 @@
 
 @implementation BCStatusItemAppDelegate
 
-@synthesize window;
-
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	NSImage *image = [NSImage imageNamed:@"status"];
 	NSImage *alternateImage = [NSImage imageNamed:@"status-selected"];
-	statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
+	statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
 	
 	[statusItem setupView];
 	

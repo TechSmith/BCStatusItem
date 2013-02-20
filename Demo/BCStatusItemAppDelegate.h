@@ -10,7 +10,6 @@
 
 @interface BCStatusItemAppDelegate : NSObject
 {
-    NSWindow *window;
 	NSStatusItem *statusItem;
 	IBOutlet NSMenu *statusMenu;
 }

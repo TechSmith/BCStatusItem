@@ -21,22 +21,8 @@
 {
 	NSStatusItem *parentStatusItem;
 	NSMenu *menu;
-	
 	BOOL highlighted;
-	BOOL doesHighlight;
-  BOOL isDragged;
-	
-	NSImage *image;
-	NSImage *alternateImage;
-  NSImage *dragImage;
-  NSImage *originalImage;
-  
-	NSString *title;
-	NSAttributedString *attributedTitle;
-  NSArray *animFrames;
-  NSThread *animThread;
-  
-	id<BCStatusItemViewDelegate> delegate;
+   NSThread *animThread;
 }
 
 @property (assign, nonatomic) BOOL doesHighlight;
@@ -50,7 +36,7 @@
 @property (copy, nonatomic) NSArray *animFrames;
 
 
-@property (assign, nonatomic) id<BCStatusItemViewDelegate> delegate;
+@property (weak, nonatomic) id<BCStatusItemViewDelegate> delegate;
 @property (nonatomic, getter = isEnabled) BOOL enabled;
 
 + (BCStatusItemView *)viewWithStatusItem:(NSStatusItem *)statusItem;

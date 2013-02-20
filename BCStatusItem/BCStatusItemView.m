@@ -14,21 +14,9 @@
 
 @implementation BCStatusItemView
 
-@synthesize doesHighlight;
-@synthesize isDragged;
-@synthesize animFrames;
-@synthesize title;
-@synthesize attributedTitle;
-@synthesize image;
-@synthesize dragImage;
-@synthesize alternateImage;
-@synthesize originalImage;
-@synthesize delegate;
-@synthesize enabled;
-
 + (BCStatusItemView *)viewWithStatusItem:(NSStatusItem *)statusItem
 {
-	return [[[BCStatusItemView alloc] initWithStatusItem:statusItem] autorelease];
+	return [[BCStatusItemView alloc] initWithStatusItem:statusItem];
 }
 
 - (id)initWithStatusItem:(NSStatusItem *)statusItem
@@ -55,17 +43,6 @@
 - (void)dealloc
 {
 	[parentStatusItem removeObserver:self forKeyPath:@"length"];
-	self.title = nil;
-	self.attributedTitle = nil;
-	self.image = nil;
-	self.alternateImage = nil;
-  self.dragImage = nil;
-  self.animFrames = nil;
-	self.delegate = nil;
-  self.originalImage = nil;
-  
-	parentStatusItem = nil; // we only had weak reference
-	[super dealloc];
 }
 
 - (void)_resizeToFitIfNeeded
@@ -97,19 +74,18 @@
 #pragma mark -
 
 - (void) setAnimFrames:(NSArray *)newAnimFrames {
-  if (newAnimFrames != animFrames) {
-    [animFrames release];
-    animFrames = [newAnimFrames copy];
+  if (newAnimFrames != _animFrames)
+  {
+    _animFrames = [newAnimFrames copy];
     [self setNeedsDisplay:YES];
   }
 }
 
 - (void)setImage:(NSImage *)newImage
 {
-	if(newImage != image)
+	if(newImage != _image)
 	{
-		[image release];
-		image = [newImage copy];
+		_image = [newImage copy];
         [self _resizeToFitIfNeeded];
 		[self setNeedsDisplay:YES];
 	}
@@ -117,54 +93,43 @@
 
 - (void)setOriginalImage:(NSImage *)newImage
 {
-	if(newImage != originalImage)
+	if(newImage != _originalImage)
 	{
-		[originalImage release];
-		originalImage = [newImage copy];
-    [self _resizeToFitIfNeeded];
+		_originalImage = [newImage copy];
+      [self _resizeToFitIfNeeded];
 		[self setNeedsDisplay:YES];
 	}
 }
 
 - (void)setDragImage:(NSImage *)newDragImage
 {
-	if(newDragImage != dragImage)
+	if(newDragImage != _dragImage)
 	{
-		[dragImage release];
-		dragImage = [newDragImage copy];
+		_dragImage = [newDragImage copy];
 		[self setNeedsDisplay:YES];
 	}
 
 }
 
--(NSImage *)getDragImage {
-  return dragImage;
-}
-
--(NSImage *)getOriginalImage {
-  return originalImage;
-}
 
 - (void)setAlternateImage:(NSImage *)newAltImage
 {
-	if(newAltImage != alternateImage)
+	if(newAltImage != _alternateImage)
 	{
-		[alternateImage release];
-		alternateImage = [newAltImage copy];
+		_alternateImage = [newAltImage copy];
 		[self setNeedsDisplay:YES];
 	}
 }
 
 - (void)setTitle:(NSString *)newTitle
 {
-	if(newTitle != title)
+	if(newTitle != _title)
 	{
-		[title release];
-		title = [newTitle copy];
+		_title = [newTitle copy];
 		
 		NSFont *font = [NSFont menuBarFontOfSize:[NSFont systemFontSize] + 2.0f]; // +2 seemed to make it look right, maybe missed a font method for menu?
 		NSColor *color = [NSColor controlTextColor];
-        NSMutableParagraphStyle *paragraphStyle = [[[NSMutableParagraphStyle alloc] init] autorelease];
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         [paragraphStyle setAlignment:NSCenterTextAlignment];
         
 		NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -175,7 +140,6 @@
         
 		NSAttributedString *attrTitle = [[NSAttributedString alloc] initWithString:self.title attributes:attributes];
 		self.attributedTitle = attrTitle;
-		[attrTitle release];
 		
 		[self setNeedsDisplay:YES];
         
@@ -185,10 +149,9 @@
 
 - (void)setAttributedTitle:(NSAttributedString *)newTitle
 {
-	if(newTitle != attributedTitle)
+	if(newTitle != _attributedTitle)
 	{
-		[attributedTitle release];
-		attributedTitle = [newTitle copy];
+		_attributedTitle = [newTitle copy];
 		[self setNeedsDisplay:YES];
 	}
 }
@@ -259,7 +222,7 @@
 		drawnImage = self.alternateImage;
 	}
 	else {
-    if (isDragged) {
+    if (_isDragged) {
       drawnImage = self.dragImage;
     }
     else {
@@ -298,10 +261,8 @@
 			[textShadow setShadowColor:[NSColor colorWithCalibratedWhite:1.0f alpha:0.6f]];
 			[textShadow setShadowOffset:NSMakeSize(0, -1)];
 			[attrTitle addAttribute:NSShadowAttributeName value:textShadow range:NSMakeRange(0, [attrTitle length])];
-			[textShadow release];
 		}
 		[attrTitle drawInRect:titleRect];
-		[attrTitle release];
 	}
 }
 
@@ -310,29 +271,29 @@
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-  isDragged = YES;
+  _isDragged = YES;
   [self setNeedsDisplay:YES];
-	return [delegate statusItemView:self draggingEntered:sender];
+	return [_delegate statusItemView:self draggingEntered:sender];
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
-  isDragged = NO;
+  _isDragged = NO;
   [self setNeedsDisplay:YES];
-	[delegate statusItemView:self draggingExited:sender];
+	[_delegate statusItemView:self draggingExited:sender];
 }
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
   
-	return [delegate statusItemView:self prepareForDragOperation:sender];
+	return [_delegate statusItemView:self prepareForDragOperation:sender];
 }
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
-  isDragged = NO;
+  _isDragged = NO;
   [self setNeedsDisplay:YES];
-	return [delegate statusItemView:self performDragOperation:sender];
+	return [_delegate statusItemView:self performDragOperation:sender];
 }
 
 
@@ -353,8 +314,7 @@
   
   BOOL moreWorkToDo = YES;
   BOOL exitNow = NO;
-  NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
-  
+   
     // Add the exitNow BOOL to the thread dictionary.
   NSMutableDictionary* threadDict = [[NSThread currentThread] threadDictionary];
   [threadDict setValue:[NSNumber numberWithBool:exitNow] forKey:@"ThreadShouldExitNow"];
@@ -365,7 +325,7 @@
   
   while (moreWorkToDo && !exitNow)
   {
-    NSImage *aframe = [NSImage imageNamed:[animFrames objectAtIndex:index]];
+    NSImage *aframe = [NSImage imageNamed:[_animFrames objectAtIndex:index]];
     //NSLog(@"%@", aframe);
     [self setImage:aframe];
     
@@ -373,7 +333,7 @@
     
     [self setNeedsDisplay:YES];
     index++;
-    if (index >= [animFrames count]) {
+    if (index >= [_animFrames count]) {
      index = 0;
     }
     
@@ -382,7 +342,7 @@
     sleep(1);
   }
   
-  NSImage *aframe = [NSImage imageNamed:[animFrames lastObject]];
+  NSImage *aframe = [NSImage imageNamed:[_animFrames lastObject]];
   [self setImage:aframe];
   [self setNeedsDisplay:YES];
   
@@ -393,9 +353,6 @@
   [self setNeedsDisplay:YES];
   
   [animThread cancel];
-  [animThread release];
-  
-  
 }
 
 
