@@ -271,9 +271,14 @@
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-  _isDragged = YES;
-  [self setNeedsDisplay:YES];
-	return [_delegate statusItemView:self draggingEntered:sender];
+   NSDragOperation operation = [_delegate statusItemView:self draggingEntered:sender];
+   if (operation != NSDragOperationNone)
+   {
+      _isDragged = YES;
+      [self setNeedsDisplay:YES];
+   }
+
+	return operation;
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
@@ -285,7 +290,6 @@
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
-  
 	return [_delegate statusItemView:self prepareForDragOperation:sender];
 }
 
