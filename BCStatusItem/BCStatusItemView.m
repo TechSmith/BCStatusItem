@@ -191,7 +191,7 @@
 - (void)mouseUp:(NSEvent *)theEvent
 {
     highlighted = NO;
-    [self setNeedsDisplay:YES];
+	[self display];
 }
 
 #pragma mark -
@@ -206,7 +206,7 @@
 - (void)menuDidClose:(NSMenu *)menu
 {
 	highlighted = NO;
-	[self setNeedsDisplay:YES];	
+	[self display];
 }
 
 #pragma mark -
