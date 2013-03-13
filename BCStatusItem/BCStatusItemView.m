@@ -69,6 +69,10 @@
 		else
 			[self _resizeToFitIfNeeded];
 	}
+   else
+   {
+      [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+   }
 }
 
 #pragma mark -
