@@ -26,6 +26,9 @@
 - (void)setOriginalImage:(NSImage *)image;
 - (void)setAnimFrames:(NSArray *)animFrames;
 
+- (void)setViewImage:(NSImage *)image;
+- (void)setViewAlternateImage:(NSImage *)image;
+
 /**
  * Convenience method which gets the window frame for the custom NSStatusItem view
  */

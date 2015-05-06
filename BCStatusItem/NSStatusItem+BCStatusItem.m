@@ -55,21 +55,22 @@
 		[(BCStatusItemView *)[self view] setDelegate:delegate];
 }
 
+- (void)setViewImage:(NSImage *)image
+{
+   [(BCStatusItemView *)[self view] setImage:image];
+}
+
+- (void)setViewAlternateImage:(NSImage *)image
+{
+   [(BCStatusItemView *)[self view] setAlternateImage:image];
+}
+
 #pragma mark -
 #pragma mark Overrides
 
 // our view replaces all drawing/etc. of NSStatusItem so we forward any related changes on to it
 // TODO: we should do method swizzling or something to not block original methods
 
-- (void)setImage:(NSImage *)image
-{
-	[(BCStatusItemView *)[self view] setImage:image];
-}
-
-- (void)setAlternateImage:(NSImage *)image
-{
-	[(BCStatusItemView *)[self view] setAlternateImage:image];
-}
 - (void)setDragImage:(NSImage *)image
 {
 	[(BCStatusItemView *)[self view] setDragImage:image];
