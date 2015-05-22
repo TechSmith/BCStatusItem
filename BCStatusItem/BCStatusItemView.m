@@ -179,6 +179,16 @@
 
 #pragma mark -
 
+- (void)rightMouseDown:(NSEvent *)theEvent
+{
+    [self mouseDown:theEvent];
+}
+
+- (void)rightMouseUp:(NSEvent *)theEvent
+{
+    [self mouseUp:theEvent];
+}
+
 - (void)mouseDown:(NSEvent *)theEvent
 {
 	// TODO: implement other behaviors like support for target/action & doubleAction
